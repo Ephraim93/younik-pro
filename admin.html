@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YOUNIK · Administration</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{--cream:#F7F1E8;--surface:#FCFAF5;--tan:#D4B894;--clay:#B58E63;--clay-deep:#9A744D;
+    --ink:#2C2118;--text:#3C2E20;--text-soft:#705C46;--line:rgba(74,56,41,.16);
+    --serif:'Fraunces',serif;--sans:'Jost',sans-serif;}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:var(--sans);background:var(--cream);color:var(--text);line-height:1.5}
+  h1,h2,h3{font-family:var(--serif);font-weight:400}
+  a{color:var(--clay-deep)}
+  .btn{font-family:var(--sans);font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;padding:11px 20px;border-radius:30px;border:1px solid var(--ink);background:transparent;color:var(--ink);cursor:pointer;transition:.3s}
+  .btn:hover{background:var(--ink);color:var(--cream)}
+  .btn.solid{background:var(--ink);color:var(--cream)}
+  .btn.solid:hover{background:var(--clay-deep);border-color:var(--clay-deep)}
+  .btn.sm{padding:7px 13px;font-size:.68rem}
+  .btn.danger{border-color:#b5413a;color:#b5413a}
+  .btn.danger:hover{background:#b5413a;color:#fff}
+  input,textarea{width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:9px;background:#fff;font-family:var(--sans);font-size:.92rem;color:var(--text)}
+  input:focus,textarea:focus{outline:none;border-color:var(--clay-deep)}
+  label{display:block;font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text-soft);margin:0 0 6px}
+
+  /* Login */
+  #login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:42px;width:100%;max-width:400px;box-shadow:0 40px 80px -40px rgba(0,0,0,.3)}
+  .card .mark{font-family:var(--serif);letter-spacing:.4em;font-size:1.6rem;text-align:center;color:var(--ink)}
+  .card .sub{text-align:center;font-size:.55rem;letter-spacing:.4em;text-transform:uppercase;color:var(--clay-deep);margin:8px 0 26px}
+  .err{color:#b5413a;font-size:.82rem;min-height:18px;margin:8px 0}
+
+  /* App */
+  #app{display:none}
+  .topbar{background:var(--ink);color:var(--cream);display:flex;justify-content:space-between;align-items:center;padding:16px 28px}
+  .topbar .mark{font-family:var(--serif);letter-spacing:.34em;font-size:1.2rem}
+  .topbar a,.topbar button{color:var(--cream);background:none;border:1px solid rgba(247,241,232,.4);border-radius:30px;padding:8px 16px;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;text-decoration:none}
+  .tabs{display:flex;gap:6px;flex-wrap:wrap;padding:18px 28px 0;max-width:1100px;margin:0 auto}
+  .tabs button{background:none;border:none;font-family:var(--sans);font-size:.82rem;letter-spacing:.06em;padding:10px 16px;border-radius:30px;cursor:pointer;color:var(--text-soft)}
+  .tabs button.active{background:var(--ink);color:var(--cream)}
+  main{max-width:1100px;margin:0 auto;padding:26px 28px 80px}
+  .panel{display:none;animation:fade .3s}
+  .panel.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  h2.sec{font-size:1.6rem;color:var(--ink);margin-bottom:6px}
+  p.hint{color:var(--text-soft);font-size:.9rem;font-weight:300;margin-bottom:24px}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .field{margin-bottom:16px}
+  .block{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:24px;margin-bottom:18px}
+  .row{display:flex;gap:12px;align-items:center}
+  .row.sb{justify-content:space-between}
+  table{width:100%;border-collapse:collapse;font-size:.9rem}
+  th,td{text-align:left;padding:12px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text-soft);font-weight:500}
+  .badge{font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:20px;background:var(--tan);color:var(--ink)}
+  .toast{position:fixed;bottom:24px;left:50%;transform:translate(-50%,140px);background:var(--ink);color:var(--cream);padding:12px 24px;border-radius:30px;font-size:.85rem;transition:.5s;z-index:50}
+  .toast.show{transform:translate(-50%,0)}
+  @media(max-width:700px){.grid2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div id="login">
+  <div class="card">
+    <div class="mark">YOUNIK</div>
+    <div class="sub">Administration</div>
+    <div class="field"><label>Mot de passe</label><input type="password" id="pw" onkeydown="if(event.key==='Enter')login()"></div>
+    <div class="err" id="login-err"></div>
+    <button class="btn solid" style="width:100%" onclick="login()">Se connecter</button>
+  </div>
+</div>
+
+<div id="app">
+  <div class="topbar">
+    <span class="mark">YOUNIK</span>
+    <div class="row">
+      <a href="/" target="_blank">Voir le site</a>
+      <button onclick="logout()">Déconnexion</button>
+    </div>
+  </div>
+  <div class="tabs">
+    <button class="active" data-tab="dashboard" onclick="tab(this)">Tableau de bord</button>
+    <button data-tab="settings" onclick="tab(this)">Contenu du site</button>
+    <button data-tab="treatments" onclick="tab(this)">Soins</button>
+    <button data-tab="products" onclick="tab(this)">Produits & stock</button>
+    <button data-tab="orders" onclick="tab(this)">Commandes</button>
+    <button data-tab="booking" onclick="tab(this)">Rendez-vous</button>
+    <button data-tab="reviews" onclick="tab(this)">Avis</button>
+    <button data-tab="payment" onclick="tab(this)">Paiement</button>
+    <button data-tab="security" onclick="tab(this)">Sécurité</button>
+  </div>
+  <main>
+    <!-- TABLEAU DE BORD -->
+    <section class="panel active" id="p-dashboard">
+      <h2 class="sec">Tableau de bord</h2>
+      <p class="hint">Vue d'ensemble de votre activité.</p>
+      <div id="stats-cards" class="grid2" style="grid-template-columns:repeat(4,1fr);gap:14px"></div>
+      <div class="grid2" style="margin-top:18px">
+        <div class="block"><h3 style="font-family:var(--serif);font-size:1.2rem;color:var(--ink);margin-bottom:14px">Produits les plus commandés</h3><div id="stats-top"></div></div>
+        <div class="block"><h3 style="font-family:var(--serif);font-size:1.2rem;color:var(--ink);margin-bottom:14px">Stock bas (≤ 5)</h3><div id="stats-low"></div></div>
+      </div>
+    </section>
+
+    <!-- CONTENU -->
+    <section class="panel" id="p-settings">
+      <h2 class="sec">Contenu du site</h2>
+      <p class="hint">Modifiez les textes affichés sur la page d'accueil. « Enregistrer » publie aussitôt pour tous les visiteurs.</p>
+      <div class="block">
+        <label>Image de fond — page d'accueil</label>
+        <div class="row" style="gap:16px;align-items:flex-start;margin-top:8px">
+          <div id="hero-preview"></div>
+          <div style="flex:1">
+            <input type="file" accept="image/*" id="hero-file" style="padding:8px">
+            <div class="row" style="margin-top:8px">
+              <button class="btn sm" onclick="uploadHero()">Téléverser l'image de fond</button>
+              <button class="btn sm danger" id="hero-remove" style="display:none" onclick="removeHero()">Retirer</button>
+            </div>
+            <p class="hint" style="margin:8px 0 0">Photo affichée en grand derrière le logo sur la page d'accueil. Sans image, un fond crème uni est utilisé.</p>
+          </div>
+        </div>
+      </div>
+      <div class="block" id="settings-fields"></div>
+      <button class="btn solid" onclick="saveSettings()">Enregistrer le contenu</button>
+    </section>
+
+    <!-- SOINS -->
+    <section class="panel" id="p-treatments">
+      <h2 class="sec">Soins proposés</h2>
+      <p class="hint">Les soins affichés dans la section « Nos Soins ».</p>
+      <div id="treatments-list"></div>
+      <p class="hint">Les soins se modifient pour l'instant dans le fichier de données (data/db.json). Dites-moi si vous voulez aussi l'ajout/suppression depuis ici.</p>
+    </section>
+
+    <!-- PRODUITS -->
+    <section class="panel" id="p-products">
+      <h2 class="sec">Produits & stock</h2>
+      <p class="hint">Ajoutez, modifiez ou retirez des produits. Le stock diminue automatiquement à chaque commande.</p>
+      <div id="products-list"></div>
+      <button class="btn" onclick="addProduct()">+ Nouveau produit</button>
+    </section>
+
+    <!-- COMMANDES -->
+    <section class="panel" id="p-orders">
+      <h2 class="sec">Commandes & demandes</h2>
+      <p class="hint">Les demandes envoyées depuis le site apparaissent ici.</p>
+      <div id="orders-list"></div>
+    </section>
+
+    <!-- RENDEZ-VOUS -->
+    <section class="panel" id="p-booking">
+      <h2 class="sec">Rendez-vous</h2>
+      <p class="hint">Définissez vos horaires : les visiteurs ne pourront réserver que des créneaux libres dans cette plage.</p>
+      <div class="block" id="booking-config" style="max-width:560px">
+        <label class="row" style="margin:0 0 16px;font-size:.9rem;text-transform:none;letter-spacing:0;color:var(--text)"><input type="checkbox" id="b-enabled" style="width:auto;margin-right:8px"> Réservation en ligne activée</label>
+        <div class="field"><label>Jours d'ouverture</label><div class="row" id="b-days" style="flex-wrap:wrap;gap:6px"></div></div>
+        <div class="grid2">
+          <div class="field"><label>Heure d'ouverture</label><input type="time" id="b-start"></div>
+          <div class="field"><label>Heure de fermeture</label><input type="time" id="b-end"></div>
+        </div>
+        <div class="grid2">
+          <div class="field"><label>Durée d'un créneau (min)</label><input type="number" id="b-slot" min="15" step="15"></div>
+          <div class="field"><label>Délai minimum avant RDV (h)</label><input type="number" id="b-lead" min="0"></div>
+        </div>
+        <div class="field"><label>Réservable jusqu'à (jours à l'avance)</label><input type="number" id="b-horizon" min="1"></div>
+        <button class="btn solid" onclick="saveBooking()">Enregistrer les horaires</button>
+      </div>
+      <h3 style="font-family:var(--serif);font-size:1.3rem;color:var(--ink);margin:10px 0 14px">Prochains rendez-vous</h3>
+      <div id="appts-list"></div>
+    </section>
+
+    <!-- AVIS -->
+    <section class="panel" id="p-reviews">
+      <h2 class="sec">Avis clients</h2>
+      <p class="hint">Les avis publiés apparaissent sur le site. Vous pouvez les masquer ou les supprimer.</p>
+      <div id="reviews-list"></div>
+    </section>
+
+    <!-- PAIEMENT -->
+    <section class="panel" id="p-payment">
+      <h2 class="sec">Paiement</h2>
+      <p class="hint">Choisissez comment vos clients règlent leurs commandes.</p>
+      <div class="block" style="max-width:560px">
+        <div class="field"><label>Mode de paiement</label>
+          <select id="pay-mode">
+            <option value="place">Sur place / à la livraison</option>
+            <option value="mobile">Mobile money / virement (avec instructions)</option>
+            <option value="online">Paiement en ligne (Flutterwave)</option>
+          </select>
+        </div>
+        <div class="field"><label>Instructions de paiement (mode mobile money)</label><textarea id="pay-instr" rows="3"></textarea></div>
+        <p class="hint" style="margin-top:6px"><b>Paiement en ligne</b> — renseignez vos clés Flutterwave (compte sur flutterwave.com) pour accepter carte et mobile money. La clé secrète reste sur le serveur et n'est jamais visible côté public.</p>
+        <div class="field"><label>Clé publique Flutterwave</label><input id="pay-flwpub" placeholder="FLWPUBK-..."></div>
+        <div class="field"><label>Clé secrète Flutterwave</label><input type="password" id="pay-flwsec" placeholder="FLWSECK-..."></div>
+        <button class="btn solid" onclick="savePayment()">Enregistrer le paiement</button>
+      </div>
+    </section>
+
+    <!-- SECURITE -->
+    <section class="panel" id="p-security">
+      <h2 class="sec">Sécurité</h2>
+      <p class="hint">Changez votre mot de passe administrateur.</p>
+      <div class="block" style="max-width:420px">
+        <div class="field"><label>Nouveau mot de passe (6 caractères min.)</label><input type="password" id="newpw"></div>
+        <button class="btn solid" onclick="changePw()">Mettre à jour</button>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  const SETTINGS_LABELS={
+    announcement:'Bandeau d\u2019annonce',heroEyebrow:'Hero — sur-titre',heroTitle:'Hero — titre',
+    heroLead:'Hero — paragraphe',aboutTitle:'Concept — titre',aboutText:'Concept — texte',
+    contactAddress:'Adresse',contactPhone:'Téléphone',contactEmail:'Email',hours:'Horaires',
+    mapLat:'Latitude GPS (ex : 5.3536)',mapLng:'Longitude GPS (ex : -3.9869)',
+    whatsapp:'Numéro WhatsApp (format international, ex : 2250700000000)',
+    brand:'Nom de la marque',tagline:'Slogan',currency:'Devise (ex : F)'
+  };
+  const LONG=['heroLead','aboutText'];
+  let SETTINGS={};
+
+  function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2400);}
+  function esc(s){return (s==null?'':String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+  function fmt(n){return new Intl.NumberFormat('fr-FR').format(n)+' '+(SETTINGS.currency||'F');}
+  async function api(url,opt){
+    try {
+      const r=await fetch(url,Object.assign({headers:{'Content-Type':'application/json'}},opt));
+      if(r.status===401){show('login');throw 'auth';}
+      return r;
+    } catch(e) {
+      if(e==='auth') throw e;
+      console.error('API error:',e);
+      throw e;
+    }
+  }
+
+  function show(which){document.getElementById('login').style.display=which==='login'?'flex':'none';document.getElementById('app').style.display=which==='app'?'block':'none';}
+
+  async function init(){
+    try {
+      const s=await (await fetch('/api/session')).json();
+      if(s.auth){ show('app'); loadAll(); } else { show('login'); }
+    } catch(e) {
+      show('login');
+    }
+  }
+  async function login(){
+    const pw=document.getElementById('pw').value;
+    if(!pw){ document.getElementById('login-err').textContent='Entrez votre mot de passe.'; return; }
+    try {
+      const r=await fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:pw})});
+      if(r.ok){ document.getElementById('login-err').textContent=''; show('app'); loadAll(); }
+      else { document.getElementById('login-err').textContent='Mot de passe incorrect.'; }
+    } catch(e) {
+      document.getElementById('login-err').textContent='Erreur réseau — réessayez.';
+    }
+  }
+  async function logout(){ await fetch('/api/logout',{method:'POST'}); location.reload(); }
+
+  function tab(btn){
+    document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('p-'+btn.dataset.tab).classList.add('active');
+  }
+
+  async function loadAll(){ await loadSettings(); loadTreatments(); loadProducts(); loadOrders(); loadBooking(); loadAppointments(); loadStats(); loadReviewsAdmin(); loadPayment(); }
+
+  // Réglages
+  async function loadSettings(){
+    SETTINGS=await (await api('/api/admin/settings')).json();
+    const c=document.getElementById('settings-fields');
+    c.innerHTML=Object.keys(SETTINGS_LABELS).map(k=>{
+      const v=esc(SETTINGS[k]||'');
+      const input=LONG.includes(k)?`<textarea id="s-${k}" rows="3">${v}</textarea>`:`<input id="s-${k}" value="${v}">`;
+      return `<div class="field"><label>${SETTINGS_LABELS[k]}</label>${input}</div>`;
+    }).join('');
+    renderHeroPreview();
+  }
+  function renderHeroPreview(){
+    const prev=document.getElementById('hero-preview');
+    const rm=document.getElementById('hero-remove');
+    if(SETTINGS.heroImageUrl){
+      prev.innerHTML=`<img src="${esc(SETTINGS.heroImageUrl)}" alt="" style="width:110px;height:130px;object-fit:cover;border-radius:12px;border:1px solid var(--line)">`;
+      rm.style.display='';
+    }else{
+      prev.innerHTML=`<div style="width:110px;height:130px;border-radius:12px;border:1px dashed var(--line);display:flex;align-items:center;justify-content:center;color:var(--text-soft);font-size:.62rem;text-align:center">Croquis<br>par défaut</div>`;
+      rm.style.display='none';
+    }
+  }
+  async function uploadHero(){
+    const file=document.getElementById('hero-file').files[0];
+    if(!file){ toast('Choisissez d\u2019abord une image'); return; }
+    const fd=new FormData(); fd.append('image',file);
+    const r=await fetch('/api/admin/settings/hero-image',{method:'POST',body:fd});
+    if(r.status===401){ show('login'); return; }
+    if(r.ok){ SETTINGS=await r.json(); renderHeroPreview(); toast('Image d\u2019accueil mise à jour ✓'); }
+    else { const e=await r.json().catch(()=>({})); toast(e.error||'Échec du téléversement'); }
+  }
+  async function removeHero(){
+    if(!confirm('Retirer l\u2019image d\u2019accueil ?'))return;
+    SETTINGS=await (await api('/api/admin/settings/hero-image',{method:'DELETE'})).json();
+    renderHeroPreview(); toast('Image retirée');
+  }
+  async function saveSettings(){
+    const patch={};
+    Object.keys(SETTINGS_LABELS).forEach(k=>{const el=document.getElementById('s-'+k);if(el)patch[k]=el.value;});
+    SETTINGS=await (await api('/api/admin/settings',{method:'PUT',body:JSON.stringify(patch)})).json();
+    toast('Contenu enregistré ✓');
+  }
+
+  // Soins
+  async function loadTreatments(){
+    const data=await (await fetch('/api/content')).json();
+    document.getElementById('treatments-list').innerHTML=(data.treatments||[]).map(t=>
+      `<div class="block"><div class="row sb"><h3>${esc(t.name)}</h3><span class="badge">${esc(t.duration||'')}</span></div><p style="font-weight:300;color:var(--text-soft);margin-top:8px">${esc(t.description||'')}</p></div>`).join('');
+  }
+
+  // Produits
+  async function loadProducts(){
+    const list=await (await api('/api/admin/products')).json();
+    document.getElementById('products-list').innerHTML=list.map(p=>productCard(p)).join('') || '<p class="hint">Aucun produit.</p>';
+  }
+  function productCard(p){
+    const img=p.imageUrl
+      ? `<img src="${esc(p.imageUrl)}" alt="" style="width:80px;height:80px;object-fit:cover;border-radius:10px;border:1px solid var(--line)">`
+      : `<div style="width:80px;height:80px;border-radius:10px;border:1px dashed var(--line);display:flex;align-items:center;justify-content:center;color:var(--text-soft);font-size:.6rem;text-align:center">Aucune<br>image</div>`;
+    return `<div class="block" data-id="${p.id}">
+      <div class="row" style="gap:16px;align-items:flex-start;margin-bottom:16px">
+        ${img}
+        <div style="flex:1">
+          <label>Image du produit (JPEG, PNG, WebP · 4 Mo max)</label>
+          <input type="file" accept="image/*" data-img style="padding:8px">
+          <div class="row" style="margin-top:8px">
+            <button class="btn sm" onclick="uploadImage('${p.id}',this)">Téléverser l'image</button>
+            ${p.imageUrl?`<button class="btn sm danger" onclick="removeImage('${p.id}')">Retirer l'image</button>`:''}
+          </div>
+        </div>
+      </div>
+      <div class="grid2">
+        <div class="field"><label>Nom</label><input value="${esc(p.name)}" data-f="name"></div>
+        <div class="field"><label>Catégorie</label><input value="${esc(p.category||'')}" data-f="category"></div>
+      </div>
+      <div class="field"><label>Description</label><textarea rows="2" data-f="description">${esc(p.description||'')}</textarea></div>
+      <div class="grid2">
+        <div class="field"><label>Prix</label><input type="number" value="${p.price}" data-f="price"></div>
+        <div class="field"><label>Stock</label><input type="number" value="${p.stock}" data-f="stock"></div>
+      </div>
+      <div class="row sb">
+        <label class="row" style="margin:0;font-size:.8rem;text-transform:none;letter-spacing:0;color:var(--text)"><input type="checkbox" style="width:auto;margin-right:8px" ${p.active?'checked':''} data-f="active"> Visible sur le site</label>
+        <div class="row">
+          <button class="btn sm" onclick="saveProduct('${p.id}',this)">Enregistrer</button>
+          <button class="btn sm danger" onclick="delProduct('${p.id}')">Supprimer</button>
+        </div>
+      </div>
+    </div>`;
+  }
+  function gather(block){
+    const o={};block.querySelectorAll('[data-f]').forEach(el=>{o[el.dataset.f]=el.type==='checkbox'?el.checked:el.value;});return o;
+  }
+  async function addProduct(){
+    await api('/api/admin/products',{method:'POST',body:JSON.stringify({name:'Nouveau produit',price:0,stock:0,active:false})});
+    loadProducts(); toast('Produit ajouté');
+  }
+  async function saveProduct(id,btn){
+    const block=btn.closest('.block');
+    await api('/api/admin/products/'+id,{method:'PUT',body:JSON.stringify(gather(block))});
+    toast('Produit enregistré ✓');
+  }
+  async function delProduct(id){
+    if(!confirm('Supprimer ce produit ?'))return;
+    await api('/api/admin/products/'+id,{method:'DELETE'}); loadProducts(); toast('Produit supprimé');
+  }
+  async function uploadImage(id,btn){
+    const block=btn.closest('.block');
+    const file=block.querySelector('[data-img]').files[0];
+    if(!file){ toast('Choisissez d\u2019abord une image'); return; }
+    const fd=new FormData(); fd.append('image',file);
+    const r=await fetch('/api/admin/products/'+id+'/image',{method:'POST',body:fd});
+    if(r.status===401){ show('login'); return; }
+    if(r.ok){ loadProducts(); toast('Image mise à jour ✓'); }
+    else { const e=await r.json().catch(()=>({})); toast(e.error||'Échec du téléversement'); }
+  }
+  async function removeImage(id){
+    if(!confirm('Retirer l\u2019image de ce produit ?'))return;
+    await api('/api/admin/products/'+id+'/image',{method:'DELETE'}); loadProducts(); toast('Image retirée');
+  }
+
+  // Commandes
+  async function loadOrders(){
+    const list=await (await api('/api/admin/orders')).json();
+    if(!list.length){document.getElementById('orders-list').innerHTML='<p class="hint">Aucune commande pour le moment.</p>';return;}
+    document.getElementById('orders-list').innerHTML='<table><thead><tr><th>Date</th><th>Client</th><th>Articles</th><th>Total</th><th>Statut</th></tr></thead><tbody>'+
+      list.map(o=>{
+        const d=new Date(o.createdAt).toLocaleString('fr-FR');
+        const items=o.items.map(i=>esc(i.name)+' × '+i.qty).join('<br>');
+        const opts=['nouvelle','traitée','annulée'].map(st=>`<option ${o.status===st?'selected':''}>${st}</option>`).join('');
+        return `<tr><td>${d}</td><td>${esc(o.name)}<br><span style="color:var(--text-soft)">${esc(o.phone)}</span>${o.note?'<br><em style="color:var(--text-soft)">'+esc(o.note)+'</em>':''}</td><td>${items}</td><td>${fmt(o.total)}</td><td><select onchange="setStatus('${o.id}',this.value)" style="width:auto;padding:6px 8px">${opts}</select></td></tr>`;
+      }).join('')+'</tbody></table>';
+  }
+  async function setStatus(id,status){ await api('/api/admin/orders/'+id,{method:'PUT',body:JSON.stringify({status})}); toast('Statut mis à jour'); }
+
+  // Rendez-vous
+  const DOWADMIN=[[1,'Lun'],[2,'Mar'],[3,'Mer'],[4,'Jeu'],[5,'Ven'],[6,'Sam'],[0,'Dim']];
+  const DOWFULL=['Dim','Lun','Mar','Mer','Jeu','Ven','Sam'];
+  const MONADMIN=['Janv','Févr','Mars','Avr','Mai','Juin','Juil','Août','Sept','Oct','Nov','Déc'];
+  async function loadBooking(){
+    const b=await (await api('/api/admin/booking')).json();
+    document.getElementById('b-enabled').checked=b.enabled!==false;
+    document.getElementById('b-start').value=b.startTime||'09:00';
+    document.getElementById('b-end').value=b.endTime||'18:00';
+    document.getElementById('b-slot').value=b.slotMinutes||60;
+    document.getElementById('b-lead').value=b.leadHours||0;
+    document.getElementById('b-horizon').value=b.horizonDays||21;
+    document.getElementById('b-days').innerHTML=DOWADMIN.map(([v,lbl])=>
+      `<label class="row" style="margin:0;font-size:.82rem;text-transform:none;letter-spacing:0;color:var(--text)"><input type="checkbox" value="${v}" ${b.days.includes(v)?'checked':''} style="width:auto;margin-right:5px">${lbl}</label>`).join('');
+  }
+  async function saveBooking(){
+    const days=Array.from(document.querySelectorAll('#b-days input:checked')).map(i=>+i.value);
+    const patch={
+      enabled:document.getElementById('b-enabled').checked, days,
+      startTime:document.getElementById('b-start').value, endTime:document.getElementById('b-end').value,
+      slotMinutes:document.getElementById('b-slot').value, leadHours:document.getElementById('b-lead').value,
+      horizonDays:document.getElementById('b-horizon').value
+    };
+    await api('/api/admin/booking',{method:'PUT',body:JSON.stringify(patch)});
+    toast('Horaires enregistrés ✓');
+  }
+  async function loadAppointments(){
+    const list=await (await api('/api/admin/appointments')).json();
+    const upcoming=list.slice().sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time));
+    if(!upcoming.length){document.getElementById('appts-list').innerHTML='<p class="hint">Aucun rendez-vous pour le moment.</p>';return;}
+    document.getElementById('appts-list').innerHTML='<table><thead><tr><th>Date</th><th>Soin</th><th>Client</th><th>Statut</th></tr></thead><tbody>'+
+      upcoming.map(a=>{
+        const d=new Date(a.date+'T00:00:00');
+        const when=DOWFULL[d.getDay()]+' '+d.getDate()+' '+MONADMIN[d.getMonth()]+' · <b>'+esc(a.time)+'</b>';
+        const opts=['confirmé','honoré','annulé'].map(st=>`<option ${a.status===st?'selected':''}>${st}</option>`).join('');
+        return `<tr><td>${when}</td><td>${esc(a.treatmentName)}</td><td>${esc(a.name)}<br><span style="color:var(--text-soft)">${esc(a.phone)}</span>${a.note?'<br><em style="color:var(--text-soft)">'+esc(a.note)+'</em>':''}</td><td><select onchange="setApptStatus('${a.id}',this.value)" style="width:auto;padding:6px 8px">${opts}</select></td></tr>`;
+      }).join('')+'</tbody></table>';
+  }
+  async function setApptStatus(id,status){ await api('/api/admin/appointments/'+id,{method:'PUT',body:JSON.stringify({status})}); toast('Rendez-vous mis à jour'); loadAppointments(); }
+
+  // Tableau de bord
+  function statCard(label,value){ return `<div class="block" style="text-align:center;padding:22px"><div style="font-family:var(--serif);font-size:1.9rem;color:var(--ink)">${value}</div><div style="font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text-soft);margin-top:6px">${label}</div></div>`; }
+  async function loadStats(){
+    const s=await (await api('/api/admin/stats')).json();
+    const cur=s.currency||'F';
+    const money=n=>new Intl.NumberFormat('fr-FR').format(n)+' '+cur;
+    document.getElementById('stats-cards').innerHTML=
+      statCard('Commandes',s.ordersCount)+
+      statCard("Chiffre d'affaires",money(s.revenue))+
+      statCard('RDV à venir',s.upcomingAppointments)+
+      statCard('Note moyenne',s.reviews.count?(s.reviews.avg+' ★'):'—');
+    document.getElementById('stats-top').innerHTML = s.topProducts.length
+      ? '<table><tbody>'+s.topProducts.map(t=>`<tr><td>${esc(t.name)}</td><td style="text-align:right"><b>${t.qty}</b></td></tr>`).join('')+'</tbody></table>'
+      : '<p class="hint">Pas encore de commande.</p>';
+    document.getElementById('stats-low').innerHTML = s.lowStock.length
+      ? '<table><tbody>'+s.lowStock.map(p=>`<tr><td>${esc(p.name)}</td><td style="text-align:right;color:${p.stock<=0?'#b5413a':'inherit'}"><b>${p.stock}</b></td></tr>`).join('')+'</tbody></table>'
+      : '<p class="hint">Aucun produit en stock bas. 👍</p>';
+  }
+
+  // Avis (modération)
+  function stars(n){ return '★'.repeat(n)+'☆'.repeat(5-n); }
+  async function loadReviewsAdmin(){
+    const list=await (await api('/api/admin/reviews')).json();
+    if(!list.length){ document.getElementById('reviews-list').innerHTML='<p class="hint">Aucun avis pour le moment.</p>'; return; }
+    document.getElementById('reviews-list').innerHTML=list.map(r=>{
+      const d=new Date(r.createdAt).toLocaleDateString('fr-FR');
+      const hidden=r.status!=='publié';
+      return `<div class="block" style="${hidden?'opacity:.6':''}">
+        <div class="row sb"><div><span style="color:var(--clay)">${stars(r.rating)}</span> <b>${esc(r.name)}</b> <span style="color:var(--text-soft);font-size:.8rem">· ${d}${r.productName?' · '+esc(r.productName):''}</span></div>
+        <div class="row">
+          <button class="btn sm" onclick="toggleReview('${r.id}','${hidden?'publié':'masqué'}')">${hidden?'Publier':'Masquer'}</button>
+          <button class="btn sm danger" onclick="delReview('${r.id}')">Supprimer</button>
+        </div></div>
+        <p style="font-weight:300;color:var(--text);margin-top:10px">${esc(r.comment)}</p>
+      </div>`;
+    }).join('');
+  }
+  async function toggleReview(id,status){ await api('/api/admin/reviews/'+id,{method:'PUT',body:JSON.stringify({status})}); loadReviewsAdmin(); loadStats(); toast('Avis mis à jour'); }
+  async function delReview(id){ if(!confirm('Supprimer cet avis ?'))return; await api('/api/admin/reviews/'+id,{method:'DELETE'}); loadReviewsAdmin(); loadStats(); toast('Avis supprimé'); }
+
+  // Paiement
+  async function loadPayment(){
+    const s=await (await api('/api/admin/settings')).json();
+    document.getElementById('pay-mode').value=s.paymentMode||'mobile';
+    document.getElementById('pay-instr').value=s.mobileInstructions||'';
+    document.getElementById('pay-flwpub').value=s.flwPublicKey||'';
+    document.getElementById('pay-flwsec').value=s.flwSecretKey||'';
+  }
+  async function savePayment(){
+    const patch={
+      paymentMode:document.getElementById('pay-mode').value,
+      mobileInstructions:document.getElementById('pay-instr').value,
+      flwPublicKey:document.getElementById('pay-flwpub').value.trim(),
+      flwSecretKey:document.getElementById('pay-flwsec').value.trim()
+    };
+    await api('/api/admin/settings',{method:'PUT',body:JSON.stringify(patch)});
+    toast('Paiement enregistré ✓');
+  }
+
+  // Sécurité
+  async function changePw(){
+    const v=document.getElementById('newpw').value;
+    const r=await api('/api/admin/password',{method:'POST',body:JSON.stringify({newPassword:v})});
+    if(r.ok){document.getElementById('newpw').value='';toast('Mot de passe mis à jour ✓');}
+    else{const e=await r.json();toast(e.error||'Erreur');}
+  }
+
+  init();
+</script>
+</body>
+</html>
