@@ -225,19 +225,38 @@
   function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2400);}
   function esc(s){return (s==null?'':String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
   function fmt(n){return new Intl.NumberFormat('fr-FR').format(n)+' '+(SETTINGS.currency||'F');}
-  async function api(url,opt){const r=await fetch(url,Object.assign({headers:{'Content-Type':'application/json'}},opt));if(r.status===401){show('login');throw 'auth';}return r;}
+  async function api(url,opt){
+    try {
+      const r=await fetch(url,Object.assign({headers:{'Content-Type':'application/json'}},opt));
+      if(r.status===401){show('login');throw 'auth';}
+      return r;
+    } catch(e) {
+      if(e==='auth') throw e;
+      console.error('API error:',e);
+      throw e;
+    }
+  }
 
   function show(which){document.getElementById('login').style.display=which==='login'?'flex':'none';document.getElementById('app').style.display=which==='app'?'block':'none';}
 
   async function init(){
-    const s=await (await fetch('/api/session')).json();
-    if(s.auth){ show('app'); loadAll(); } else { show('login'); }
+    try {
+      const s=await (await fetch('/api/session')).json();
+      if(s.auth){ show('app'); loadAll(); } else { show('login'); }
+    } catch(e) {
+      show('login');
+    }
   }
   async function login(){
     const pw=document.getElementById('pw').value;
-    const r=await fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:pw})});
-    if(r.ok){ document.getElementById('login-err').textContent=''; show('app'); loadAll(); }
-    else document.getElementById('login-err').textContent='Mot de passe incorrect.';
+    if(!pw){ document.getElementById('login-err').textContent='Entrez votre mot de passe.'; return; }
+    try {
+      const r=await fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:pw})});
+      if(r.ok){ document.getElementById('login-err').textContent=''; show('app'); loadAll(); }
+      else { document.getElementById('login-err').textContent='Mot de passe incorrect.'; }
+    } catch(e) {
+      document.getElementById('login-err').textContent='Erreur réseau — réessayez.';
+    }
   }
   async function logout(){ await fetch('/api/logout',{method:'POST'}); location.reload(); }
 
