@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YOUNIK — L'éclat unique de votre beauté</title>
+<link rel="icon" href="/assets/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#F7F1E8;--cream-2:#EFE5D6;--surface:#FCFAF5;--sand:#E7D7C0;--tan:#D4B894;
+    --clay:#B58E63;--clay-deep:#9A744D;--mocha:#7C5C3D;--espresso:#4A3829;--ink:#2C2118;
+    --text:#3C2E20;--text-soft:#6F5C46;--line:rgba(74,56,41,.13);
+    --sage:#97a585;--rose:#c5a18a;
+    --serif:'Fraunces',Georgia,serif;--sans:'Jost',-apple-system,sans-serif;--maxw:1180px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--sans);color:var(--text);background:var(--cream);line-height:1.65;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:.03;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+  a{color:inherit;text-decoration:none}
+  img{max-width:100%;display:block}
+  ::selection{background:var(--clay);color:var(--cream)}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 30px}
+  h1,h2,h3{font-family:var(--serif);font-weight:400;line-height:1.08;letter-spacing:-.01em}
+  .eyebrow{font-size:.7rem;letter-spacing:.4em;text-transform:uppercase;color:var(--clay-deep);font-weight:500}
+
+  .btn{display:inline-flex;align-items:center;gap:8px;font-size:.76rem;letter-spacing:.16em;text-transform:uppercase;padding:14px 28px;border:1px solid var(--ink);color:var(--ink);background:transparent;border-radius:40px;transition:.4s;cursor:pointer;font-family:var(--sans);font-weight:400}
+  .btn:hover{background:var(--ink);color:var(--cream);transform:translateY(-1px)}
+  .btn.solid{background:var(--ink);color:var(--cream)}
+  .btn.solid:hover{background:var(--clay-deep);border-color:var(--clay-deep)}
+
+  /* ---------- HEADER ---------- */
+  header{position:fixed;top:0;left:0;right:0;z-index:200;transition:.45s;border-bottom:1px solid transparent}
+  header.scrolled{background:rgba(247,241,232,.82);backdrop-filter:blur(16px);border-bottom-color:var(--line)}
+  .nav{display:flex;align-items:center;justify-content:space-between;gap:24px;max-width:var(--maxw);margin:0 auto;padding:14px 30px}
+  .logo{display:flex;align-items:center;cursor:pointer;flex:none}
+  .logo img{height:54px;width:auto;transition:.4s;mix-blend-mode:multiply}
+  header.scrolled .logo img{height:46px}
+  nav.menu ul{display:flex;gap:30px;list-style:none}
+  nav.menu a{font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text);position:relative;padding:6px 0;transition:.3s}
+  nav.menu a::after{content:"";position:absolute;left:50%;bottom:0;width:0;height:1.5px;background:var(--rose);transition:.35s;transform:translateX(-50%)}
+  nav.menu a:hover{color:var(--ink)}
+  nav.menu a.on{color:var(--ink)}
+  nav.menu a.on::after,nav.menu a:hover::after{width:100%}
+  .nav-cta{display:flex;align-items:center;gap:16px;flex:none}
+  .cart-pill{position:relative;cursor:pointer;font-size:.78rem;letter-spacing:.1em;color:var(--text);display:flex;align-items:center;gap:6px}
+  .cart-pill .badge{background:var(--clay-deep);color:#fff;border-radius:20px;font-size:.66rem;min-width:18px;height:18px;display:inline-flex;align-items:center;justify-content:center;padding:0 5px}
+  .burger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:6px}
+  .burger span{width:24px;height:1.6px;background:var(--ink);transition:.3s}
+
+  .mobile-menu{position:fixed;inset:0;z-index:300;background:var(--cream);display:none;flex-direction:column;align-items:center;justify-content:center;gap:26px}
+  .mobile-menu.open{display:flex}
+  .mobile-menu a{font-family:var(--serif);font-size:1.9rem;color:var(--ink)}
+  .mobile-menu .close{position:absolute;top:22px;right:26px;font-size:2rem;background:none;border:none;cursor:pointer;color:var(--ink)}
+
+  /* ---------- VIEWS / TRANSITIONS ---------- */
+  #filigrane{position:fixed;inset:0;background-position:center;background-size:cover;opacity:.05;filter:blur(2px) saturate(.8);z-index:0;pointer-events:none}
+  main{padding-top:84px;min-height:100vh;position:relative;z-index:1}
+  .view{display:none}
+  .view.active{display:block;animation:viewIn .6s cubic-bezier(.16,.84,.44,1)}
+  @keyframes viewIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+  .stagger>*{opacity:0;animation:rise .7s cubic-bezier(.16,.84,.44,1) forwards}
+  .stagger>*:nth-child(1){animation-delay:.05s}.stagger>*:nth-child(2){animation-delay:.13s}
+  .stagger>*:nth-child(3){animation-delay:.21s}.stagger>*:nth-child(4){animation-delay:.29s}
+  @keyframes rise{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+
+  .section{padding:84px 0}
+  .sec-head{max-width:640px;margin:0 auto 56px;text-align:center}
+  .sec-head h2{font-size:clamp(2rem,4.4vw,3.3rem);color:var(--ink);margin-top:14px}
+  .sec-head p{margin-top:16px;color:var(--text-soft);font-weight:300}
+  .hr-orn{display:flex;align-items:center;justify-content:center;gap:14px;margin:0 auto 6px;color:var(--rose)}
+  .hr-orn::before,.hr-orn::after{content:"";height:1px;width:46px;background:linear-gradient(90deg,transparent,var(--clay))}
+  .hr-orn::after{background:linear-gradient(90deg,var(--clay),transparent)}
+
+  /* ---------- HOME ---------- */
+  .home-hero{position:relative;min-height:84vh;display:flex;align-items:center;background:var(--cream-2) center/cover no-repeat}
+  .home-hero::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(44,33,24,.34) 0%,rgba(74,56,41,.10) 40%,rgba(247,241,232,.62) 100%)}
+  .hero-lockup{position:relative;z-index:2;max-width:440px;margin-left:auto;text-align:center;background:rgba(247,241,232,.84);backdrop-filter:blur(9px);border:1px solid rgba(255,255,255,.55);border-radius:24px;padding:46px 42px;box-shadow:0 44px 90px -34px rgba(44,33,24,.45);animation:rise 1s both}
+  .hero-lockup img{max-width:300px;width:82%;margin:0 auto 6px;mix-blend-mode:multiply}
+  .hero-lockup .lead{color:var(--text-soft);font-weight:300;font-size:1.02rem;margin:4px 0 26px}
+  .hero-lockup .cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+  @media(max-width:880px){
+    .home-hero{min-height:78vh}
+    .home-hero::after{background:linear-gradient(180deg,rgba(44,33,24,.25),rgba(247,241,232,.70))}
+    .hero-lockup{margin:0 auto}
+  }
+  .marquee{margin-top:46px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);overflow:hidden;background:var(--surface)}
+  .marquee div{display:flex;gap:54px;padding:16px 0;white-space:nowrap;animation:slide 26s linear infinite;font-family:var(--serif);font-style:italic;color:var(--mocha);font-size:1.05rem}
+  .marquee span{display:flex;align-items:center;gap:54px}
+  @keyframes slide{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+  .feature-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+  .feature{text-align:center;padding:40px 28px;border:1px solid var(--line);border-radius:18px;background:var(--surface);transition:.4s}
+  .feature:hover{transform:translateY(-6px);box-shadow:0 30px 50px -30px rgba(74,56,41,.3)}
+  .feature .ic{width:46px;height:46px;margin:0 auto 20px;color:var(--clay-deep)}
+  .feature h3{font-size:1.35rem;color:var(--ink);margin-bottom:10px}
+  .feature p{font-size:.92rem;color:var(--text-soft);font-weight:300}
+
+  .home-prods{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:center}
+  .split .ph{aspect-ratio:4/3;border-radius:18px;background:linear-gradient(150deg,#ECE0CD,#C9A877);box-shadow:0 30px 60px -30px rgba(74,56,41,.4);display:flex;align-items:center;justify-content:center}
+  .split .ph img{width:64%;mix-blend-mode:multiply}
+  .split h2{font-size:clamp(1.8rem,3.6vw,2.7rem);color:var(--ink);margin:14px 0 16px}
+  .split p{color:var(--text-soft);font-weight:300;margin-bottom:14px}
+
+  /* ---------- CARDS GENERIC ---------- */
+  .care-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px;max-width:900px;margin:0 auto}
+  .care{display:flex;gap:22px;padding:30px;border:1px solid var(--line);border-radius:16px;background:var(--surface);transition:.4s}
+  .care:hover{transform:translateY(-5px);box-shadow:0 26px 46px -30px rgba(74,56,41,.4)}
+  .care .num{font-family:var(--serif);font-size:1.6rem;color:var(--clay);flex:none}
+  .care h3{font-size:1.35rem;color:var(--ink)}
+  .care .dur{font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--clay-deep);margin:5px 0 9px}
+  .care p{font-size:.9rem;color:var(--text-soft);font-weight:300}
+
+  .shop-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:26px}
+  .product{background:var(--surface);border:1px solid var(--line);border-radius:18px;overflow:hidden;transition:.45s;display:flex;flex-direction:column}
+  .product:hover{transform:translateY(-7px);box-shadow:0 34px 60px -34px rgba(74,56,41,.4)}
+  .product .ph{height:200px;display:flex;align-items:center;justify-content:center;position:relative}
+  .product .ph svg{width:46px;opacity:.7;color:rgba(255,255,255,.92)}
+  .product .ph img{width:100%;height:100%;object-fit:cover}
+  .product .info{padding:24px;display:flex;flex-direction:column;flex:1}
+  .product .cat{font-size:.64rem;letter-spacing:.2em;text-transform:uppercase;color:var(--clay-deep)}
+  .product h3{font-size:1.2rem;color:var(--ink);margin:8px 0 6px}
+  .product p{font-size:.84rem;color:var(--text-soft);font-weight:300;flex:1}
+  .product .stock{font-size:.7rem;color:var(--text-soft);margin-top:10px}
+  .product .stock.out{color:#b5413a}
+  .product .row{display:flex;align-items:center;justify-content:space-between;margin-top:18px}
+  .product .price{font-family:var(--serif);font-size:1.25rem;color:var(--ink)}
+  .product button{font-family:var(--sans);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;padding:10px 17px;border-radius:30px;border:1px solid var(--ink);background:transparent;cursor:pointer;transition:.3s;color:var(--ink)}
+  .product button:hover{background:var(--ink);color:var(--cream)}
+  .product button:disabled{opacity:.4;cursor:not-allowed}
+
+  /* checkout */
+  .checkout{display:grid;grid-template-columns:1fr 1fr;gap:50px;max-width:980px;margin:46px auto 0}
+  .panel{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:34px}
+  .panel h3{font-family:var(--serif);font-size:1.35rem;color:var(--ink);margin-bottom:16px}
+  .cart-line{display:flex;justify-content:space-between;align-items:center;font-size:.9rem;padding:10px 0;border-bottom:1px solid var(--line)}
+  .cart-line button{background:none;border:none;color:#b5413a;cursor:pointer;font-size:1rem}
+  .cart-empty{font-size:.88rem;color:var(--text-soft);font-weight:300;font-style:italic}
+  .cart-total{display:flex;justify-content:space-between;font-family:var(--serif);font-size:1.3rem;color:var(--ink);margin:14px 0 4px}
+  .field{margin-bottom:16px}
+  .field label{display:block;font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--text-soft);margin-bottom:7px}
+  .field input,.field textarea,.field select{width:100%;padding:13px 15px;border:1px solid var(--line);border-radius:10px;background:var(--cream);font-family:var(--sans);font-size:.95rem;color:var(--text)}
+  .field input:focus,.field textarea:focus,.field select:focus{outline:none;border-color:var(--clay-deep);background:#fff}
+  form .btn.solid{width:100%;justify-content:center;padding:15px}
+  .pay-note{background:var(--sand);border:1px solid var(--line);border-radius:12px;padding:18px;margin-top:14px;font-size:.92rem;font-weight:300}
+  .pay-note b{font-weight:500}
+  .pay-note .wa{display:inline-flex;align-items:center;gap:8px;margin-top:12px;background:#1ebe5d;color:#fff;padding:10px 16px;border-radius:30px;font-size:.82rem;font-weight:500}
+
+  /* diagnostic */
+  .diag-card{max-width:640px;margin:0 auto;background:var(--ink);color:var(--cream);border-radius:22px;padding:44px}
+  .q-step{display:none}.q-step.active{display:block;animation:viewIn .4s}
+  .q-prog{font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--tan);margin-bottom:14px}
+  .q-step h3{font-family:var(--serif);font-size:1.6rem;color:var(--cream);margin-bottom:22px}
+  .opts{display:grid;gap:12px}
+  .opt{text-align:left;background:transparent;border:1px solid rgba(247,241,232,.24);color:var(--cream);font-family:var(--sans);font-size:1rem;padding:16px 20px;border-radius:12px;cursor:pointer;transition:.25s}
+  .opt:hover{border-color:var(--tan);background:rgba(212,184,148,.1);transform:translateX(4px)}
+  .diag-result{display:none}.diag-result.show{display:block;animation:viewIn .4s}
+  .diag-result .rlabel{font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--tan)}
+  .diag-result h3{font-family:var(--serif);font-size:1.9rem;color:var(--cream);margin:6px 0}
+  .diag-result .rdesc{color:rgba(247,241,232,.72);font-weight:300;margin-bottom:20px}
+  .rec-prods{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0 24px}
+  .rec-prod{background:rgba(247,241,232,.06);border:1px solid rgba(247,241,232,.14);border-radius:12px;padding:15px}
+  .rec-prod .pn{color:var(--cream);font-size:.92rem}.rec-prod .pp{font-family:var(--serif);color:var(--tan);margin-top:4px}
+  .diag-card .btn{border-color:var(--cream);color:var(--cream)}.diag-card .btn:hover{background:var(--cream);color:var(--ink)}
+  .diag-card .btn.solid{background:var(--tan);border-color:var(--tan);color:var(--ink)}.diag-card .btn.solid:hover{background:var(--clay)}
+  .q-restart{background:none;border:none;color:rgba(247,241,232,.6);text-decoration:underline;cursor:pointer;font-family:var(--sans);margin-top:16px}
+  .diag-actions{display:flex;gap:12px;flex-wrap:wrap}
+
+  /* rdv */
+  .rdv-card{max-width:680px;margin:0 auto;background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:38px}
+  .rdv-step{display:none}.rdv-step.active{display:block;animation:viewIn .4s}
+  .rdv-step h3{font-family:var(--serif);font-size:1.4rem;color:var(--ink);margin-bottom:18px}
+  .chips{display:flex;flex-wrap:wrap;gap:10px}
+  .chip{border:1px solid var(--line);background:var(--cream);color:var(--text);padding:12px 18px;border-radius:30px;cursor:pointer;font-family:var(--sans);font-size:.9rem;transition:.25s}
+  .chip:hover{border-color:var(--clay-deep)}.chip.sel{background:var(--ink);color:var(--cream);border-color:var(--ink)}
+  .dates{display:flex;gap:10px;overflow-x:auto;padding-bottom:8px}
+  .date-chip{display:flex;flex-direction:column;align-items:center;min-width:66px;padding:11px 6px;border:1px solid var(--line);border-radius:12px;cursor:pointer;background:var(--cream);transition:.25s;flex:none}
+  .date-chip:hover{border-color:var(--clay-deep)}.date-chip.sel{background:var(--ink);color:var(--cream);border-color:var(--ink)}
+  .date-chip .dow{font-size:.64rem;text-transform:uppercase;letter-spacing:.08em;opacity:.7}
+  .date-chip .dnum{font-family:var(--serif);font-size:1.3rem;margin-top:2px}.date-chip .mon{font-size:.58rem;text-transform:uppercase;opacity:.7}
+  .rdv-row{display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin-top:20px}
+  .rdv-back{background:none;border:none;color:var(--text-soft);text-decoration:underline;cursor:pointer;font-family:var(--sans);font-size:.85rem}
+  .rdv-summary{font-size:.9rem;color:var(--text-soft);margin-bottom:10px}.rdv-summary b{color:var(--ink);font-weight:500}
+  .muted{color:var(--text-soft);font-weight:300;font-size:.9rem}
+
+  /* reviews */
+  .rev-avg{display:flex;align-items:center;justify-content:center;gap:14px;margin:-18px 0 34px}
+  .rev-avg .num{font-family:var(--serif);font-size:2.4rem;color:var(--ink)}
+  .rev-avg .cnt{font-size:.85rem;color:var(--text-soft);font-weight:300}
+  .stars{color:var(--clay);letter-spacing:2px}.stars .off{color:var(--line)}
+  .rev-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-bottom:44px}
+  .rev{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:28px}
+  .rev .rstars{margin-bottom:12px;font-size:.9rem}
+  .rev p{font-family:var(--serif);font-style:italic;color:var(--ink);font-size:1.05rem;line-height:1.45}
+  .rev .who{margin-top:14px;font-size:.76rem;letter-spacing:.08em;text-transform:uppercase;color:var(--text-soft)}
+  .rev .prod{font-size:.68rem;color:var(--clay-deep);margin-top:4px;letter-spacing:.06em;text-transform:uppercase}
+  .rev-form{max-width:620px;margin:0 auto;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:34px}
+  .rev-form h3{font-family:var(--serif);font-size:1.4rem;color:var(--ink);margin-bottom:20px}
+  .rate-pick{display:flex;gap:6px;font-size:1.7rem;color:var(--line)}
+  .rate-pick span{cursor:pointer;transition:.15s}.rate-pick span.on{color:var(--clay)}
+
+  /* contact */
+  .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:50px;max-width:980px;margin:0 auto}
+  .info-row{padding:18px 0;border-bottom:1px solid var(--line)}
+  .info-row h4{font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;color:var(--clay-deep);margin-bottom:5px}
+  .info-row p{font-weight:300}
+  .map-wrap{max-width:980px;margin:40px auto 0;border-radius:18px;overflow:hidden;border:1px solid var(--line);height:400px;box-shadow:0 30px 60px -40px rgba(74,56,41,.4);position:relative}
+  .map-wrap iframe{width:100%;height:100%;border:0;display:block;filter:grayscale(.15) contrast(1.03)}
+  .map-dir{display:inline-flex;align-items:center;gap:8px;margin-top:18px}
+
+  /* footer */
+  footer{background:var(--ink);color:var(--cream);padding:56px 0 30px;margin-top:30px}
+  .foot-top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:24px;padding-bottom:34px;border-bottom:1px solid rgba(247,241,232,.14)}
+  footer .flogo{height:64px;mix-blend-mode:screen;opacity:.92}
+  .foot-links{display:flex;gap:24px;flex-wrap:wrap}
+  .foot-links a{color:rgba(247,241,232,.7);font-size:.82rem;letter-spacing:.08em;text-transform:uppercase;cursor:pointer}
+  .foot-links a:hover{color:var(--cream)}
+  .foot-bot{display:flex;justify-content:space-between;align-items:center;padding-top:24px;font-size:.78rem;color:rgba(247,241,232,.45);font-weight:300}
+  .foot-bot a{color:rgba(247,241,232,.6)}
+
+  /* whatsapp + toast */
+  .wa-btn{position:fixed;right:20px;bottom:20px;z-index:180;display:none;align-items:center;gap:10px;background:#1ebe5d;color:#fff;padding:13px 18px;border-radius:40px;box-shadow:0 14px 30px -8px rgba(30,190,93,.6);font-size:.85rem;font-weight:500;transition:.3s}
+  .wa-btn:hover{transform:translateY(-2px)}.wa-btn svg{width:22px;height:22px;flex:none}
+  @media(max-width:560px){.wa-btn .lbl{display:none}.wa-btn{padding:14px;border-radius:50%}}
+  .toast{position:fixed;bottom:24px;left:50%;transform:translate(-50%,140px);background:var(--ink);color:var(--cream);padding:13px 26px;border-radius:40px;z-index:300;font-size:.85rem;transition:.5s cubic-bezier(.16,.84,.44,1);box-shadow:0 20px 40px -16px rgba(0,0,0,.45)}
+  .toast.show{transform:translate(-50%,0)}
+
+  @media(max-width:880px){
+    nav.menu,.nav-cta .btn{display:none}
+    .burger{display:flex}
+    .feature-grid,.home-prods,.shop-grid,.rev-grid{grid-template-columns:1fr 1fr}
+    .split,.checkout,.contact-grid{grid-template-columns:1fr;gap:30px}
+    .care-grid{grid-template-columns:1fr}
+  }
+  @media(max-width:560px){
+    .feature-grid,.home-prods,.shop-grid,.rev-grid,.rec-prods{grid-template-columns:1fr}
+    .section{padding:60px 0}
+  }
+</style>
+</head>
+<body>
+
+<div id="filigrane"></div>
+
+<header id="header">
+  <div class="nav">
+    <div class="logo" onclick="go('/')"><img src="/assets/logo.png" alt="YOUNIK"></div>
+    <nav class="menu">
+      <ul>
+        <li><a data-route="/" onclick="go('/')">Accueil</a></li>
+        <li><a data-route="/diagnostic" onclick="go('/diagnostic')">Diagnostic</a></li>
+        <li><a data-route="/soins" onclick="go('/soins')">Soins</a></li>
+        <li><a data-route="/boutique" onclick="go('/boutique')">Boutique</a></li>
+        <li><a data-route="/avis" onclick="go('/avis')">Avis</a></li>
+        <li><a data-route="/contact" onclick="go('/contact')">Contact</a></li>
+      </ul>
+    </nav>
+    <div class="nav-cta">
+      <div class="cart-pill" onclick="go('/boutique')">Panier <span class="badge" id="cart-badge">0</span></div>
+      <a class="btn solid" onclick="go('/rdv')">Rendez-vous</a>
+      <button class="burger" onclick="document.getElementById('mm').classList.add('open')" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+
+<div class="mobile-menu" id="mm">
+  <button class="close" onclick="closeMM()">&times;</button>
+  <a onclick="go('/')">Accueil</a>
+  <a onclick="go('/diagnostic')">Diagnostic</a>
+  <a onclick="go('/soins')">Soins</a>
+  <a onclick="go('/boutique')">Boutique</a>
+  <a onclick="go('/avis')">Avis</a>
+  <a onclick="go('/rdv')">Rendez-vous</a>
+  <a onclick="go('/contact')">Contact</a>
+</div>
+
+<main>
+
+  <!-- ACCUEIL -->
+  <section class="view" data-view="/">
+    <div class="home-hero" id="home-hero">
+      <div class="wrap">
+        <div class="hero-lockup">
+          <img src="/assets/logo.png" alt="YOUNIK — L'éclat unique de votre beauté">
+          <p class="lead" id="home-lead"></p>
+          <div class="cta">
+            <a class="btn solid" onclick="go('/rdv')">Prendre rendez-vous</a>
+            <a class="btn" onclick="go('/diagnostic')">Faire mon diagnostic</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="marquee"><div><span id="mq1"></span><span id="mq2"></span></div></div>
+
+    <div class="section"><div class="wrap">
+      <div class="sec-head"><div class="hr-orn"></div><span class="eyebrow">La maison YOUNIK</span><h2 id="home-about-title"></h2><p id="home-about-text"></p></div>
+      <div class="feature-grid stagger">
+        <div class="feature"><svg class="ic" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="24" cy="24" r="14"/><circle cx="24" cy="24" r="5"/><path d="M24 10v6M24 32v6M10 24h6M32 24h6"/></svg><h3>Diagnostic de précision</h3><p>Une analyse complète de votre peau avant tout protocole.</p></div>
+        <div class="feature"><svg class="ic" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M16 6h16M19 6v9l-8 19a4 4 0 0 0 4 6h18a4 4 0 0 0 4-6l-8-19V6"/><path d="M15 31h18"/></svg><h3>Actifs de haute pureté</h3><p>Des formulations cliniques, efficaces et bien tolérées.</p></div>
+        <div class="feature"><svg class="ic" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M24 7c3 8 12 9 12 9s-1 22-12 25C13 38 12 16 12 16s9-1 12-9Z"/></svg><h3>Geste expert & humain</h3><p>Des praticiennes certifiées, à l'écoute de votre peau.</p></div>
+      </div>
+    </div></div>
+
+    <div class="section" style="background:var(--surface)"><div class="wrap">
+      <div class="sec-head"><span class="eyebrow">Nos essentiels</span><h2>La boutique YOUNIK</h2></div>
+      <div class="home-prods" id="home-prods"></div>
+      <div style="text-align:center;margin-top:42px"><a class="btn" onclick="go('/boutique')">Voir toute la boutique</a></div>
+    </div></div>
+
+    <div class="section"><div class="wrap split">
+      <div class="ph"><img src="/assets/logo.png" alt=""></div>
+      <div>
+        <span class="eyebrow">Votre éclat, sur mesure</span>
+        <h2>Et si votre peau avait sa propre routine ?</h2>
+        <p>En trois questions, notre diagnostic vous oriente vers le soin et les produits faits pour vous.</p>
+        <a class="btn solid" onclick="go('/diagnostic')">Commencer le diagnostic</a>
+      </div>
+    </div></div>
+  </section>
+
+  <!-- DIAGNOSTIC -->
+  <section class="view" data-view="/diagnostic">
+    <div class="section"><div class="wrap">
+      <div class="sec-head"><div class="hr-orn"></div><span class="eyebrow">Diagnostic de peau</span><h2>Quel soin pour votre peau ?</h2><p>Trois questions, et nous vous orientons vers le soin et les produits faits pour vous.</p></div>
+      <div class="diag-card">
+        <div class="q-step active" data-step="0"><div class="q-prog">Question 1 / 3</div><h3>Quel est votre type de peau ?</h3><div class="opts">
+          <button class="opt" onclick="answer(0,'grasse')">Grasse ou mixte — brillances, pores visibles</button>
+          <button class="opt" onclick="answer(0,'seche')">Sèche ou déshydratée — tiraillements</button>
+          <button class="opt" onclick="answer(0,'sensible')">Sensible ou réactive — rougeurs</button>
+          <button class="opt" onclick="answer(0,'normale')">Normale / équilibrée</button></div></div>
+        <div class="q-step" data-step="1"><div class="q-prog">Question 2 / 3</div><h3>Votre préoccupation principale ?</h3><div class="opts">
+          <button class="opt" onclick="answer(1,'acne')">Imperfections, acné</button>
+          <button class="opt" onclick="answer(1,'taches')">Taches, manque d'éclat</button>
+          <button class="opt" onclick="answer(1,'age')">Rides, perte de fermeté</button>
+          <button class="opt" onclick="answer(1,'hydratation')">Manque d'hydratation</button></div></div>
+        <div class="q-step" data-step="2"><div class="q-prog">Question 3 / 3</div><h3>Que recherchez-vous ?</h3><div class="opts">
+          <button class="opt" onclick="answer(2,'cabine')">Un soin en cabine</button>
+          <button class="opt" onclick="answer(2,'maison')">Une routine à la maison</button>
+          <button class="opt" onclick="answer(2,'deux')">Les deux</button></div></div>
+        <div class="diag-result" id="diag-result">
+          <div class="rlabel">Notre recommandation</div>
+          <h3 id="rec-treat-name"></h3>
+          <p class="rdesc" id="rec-treat-desc"></p>
+          <div class="rlabel" id="rec-prod-label" style="display:none">Produits conseillés</div>
+          <div class="rec-prods" id="rec-prods"></div>
+          <div class="diag-actions"><a class="btn solid" onclick="prefillBooking();go('/rdv')">Réserver ce soin</a><a class="btn" onclick="go('/boutique')">Voir la boutique</a></div>
+          <button class="q-restart" onclick="restartQuiz()">Recommencer le diagnostic</button>
+        </div>
+      </div>
+    </div></div>
+  </section>
+
+  <!-- SOINS -->
+  <section class="view" data-view="/soins">
+    <div class="section"><div class="wrap">
+      <div class="sec-head"><div class="hr-orn"></div><span class="eyebrow">Nos soins</span><h2>Des protocoles signature</h2><p>Du diagnostic à l'éclat retrouvé, des soins pensés autour de la science et du sensoriel.</p></div>
+      <div class="care-grid" id="care-grid"></div>
+      <div style="text-align:center;margin-top:44px"><a class="btn solid" onclick="go('/rdv')">Réserver un soin</a></div>
+    </div></div>
+  </section>
+
+  <!-- BOUTIQUE -->
+  <section class="view" data-view="/boutique">
+    <div class="section"><div class="wrap">
+      <div class="sec-head"><div class="hr-orn"></div><span class="eyebrow">La boutique</span><h2>Les essentiels YOUNIK</h2><p>Prolongez les résultats de la cabine à la maison.</p></div>
+      <div class="shop-grid" id="shop-grid"></div>
+      <div class="checkout">
+        <div class="panel">
+          <h3>Mon panier</h3>
+          <div id="cart-list"></div>
+          <div class="cart-total"><span>Total</span><span id="cart-total">0 F</span></div>
+        </div>
+        <div class="panel">
+          <h3>Finaliser</h3>
+          <form id="order-form">
+            <div class="field"><label>Nom complet</label><input name="name" placeholder="Votre nom"></div>
+            <div class="field"><label>Téléphone</label><input name="phone" placeholder="Votre numéro"></div>
+            <div class="field"><label>Message (optionnel)</label><textarea name="note" rows="2" placeholder="Une précision…"></textarea></div>
+            <button type="submit" class="btn solid" id="checkout-btn">Commander</button>
+          </form>
+          <div id="pay-area"></div>
+        </div>
+      </div>
+    </div></div>
+  </section>
+
+  <!-- AVIS -->
+  <section class="view" data-view="/avis">
+    <div class="section"><div class="wrap">
+      <div class="sec-head"><div class="hr-orn"></div><span class="eyebrow">Avis clients</span><h2>Ce qu'elles en disent</h2></div>
+      <div class="rev-avg" id="rev-avg"></div>
+      <div class="rev-grid" id="rev-grid"></div>
+      <div class="rev-form">
+        <h3>Laisser un avis</h3>
+        <div class="field"><label>Votre nom</label><input id="rv-name" placeholder="Prénom, initiale"></div>
+        <div class="field"><label>Votre note</label><div class="rate-pick" id="rv-stars"><span data-n="1">★</span><span data-n="2">★</span><span data-n="3">★</span><span data-n="4">★</span><span data-n="5">★</span></div></div>
+        <div class="field"><label>Produit concerné (optionnel)</label><select id="rv-prod"><option value="">— Avis général —</option></select></div>
+        <div class="field"><label>Votre avis</label><textarea id="rv-comment" rows="3" placeholder="Partagez votre expérience…"></textarea></div>
+        <button class="btn solid" onclick="submitReview()">Publier mon avis</button>
+      </div>
+    </div></div>
+  </section>
+
+  <!-- RENDEZ-VOUS -->
+  <section class="view" data-view="/rdv">
+    <div class="section"><div class="wrap">
+      <div class="sec-head"><div class="hr-orn"></div><span class="eyebrow">Rendez-vous</span><h2>Prenez rendez-vous en ligne</h2><p>Choisissez un soin, une date, un créneau — confirmation immédiate.</p></div>
+      <div class="rdv-card">
+        <div class="rdv-step active" data-rstep="treat"><h3>1. Choisissez un soin</h3><div class="chips" id="rdv-treats"></div></div>
+        <div class="rdv-step" data-rstep="date"><div class="rdv-summary" id="rdv-sum1"></div><h3>2. Choisissez une date</h3><div class="dates" id="rdv-dates"></div><div class="rdv-row"><button class="rdv-back" onclick="rdvGo('treat')">← Changer de soin</button></div></div>
+        <div class="rdv-step" data-rstep="time"><div class="rdv-summary" id="rdv-sum2"></div><h3>3. Choisissez un créneau</h3><div class="chips" id="rdv-times"></div><p class="muted" id="rdv-notimes" style="display:none">Aucun créneau disponible ce jour-là.</p><div class="rdv-row"><button class="rdv-back" onclick="rdvGo('date')">← Changer de date</button></div></div>
+        <div class="rdv-step" data-rstep="form"><div class="rdv-summary" id="rdv-sum3"></div><h3>4. Vos coordonnées</h3>
+          <div class="field"><label>Nom complet</label><input id="rdv-name" placeholder="Votre nom"></div>
+          <div class="field"><label>Téléphone</label><input id="rdv-phone" placeholder="Votre numéro"></div>
+          <div class="field"><label>Message (optionnel)</label><textarea id="rdv-note" rows="2"></textarea></div>
+          <div class="rdv-row"><button class="btn solid" onclick="confirmRdv()">Confirmer</button><button class="rdv-back" onclick="rdvGo('time')">← Retour</button></div></div>
+        <div class="rdv-step" data-rstep="done"><h3>Rendez-vous confirmé ✓</h3><p class="muted" id="rdv-done-msg"></p><div class="rdv-row"><button class="btn" onclick="restartRdv()">Prendre un autre rendez-vous</button></div></div>
+      </div>
+    </div></div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="view" data-view="/contact">
+    <div class="section"><div class="wrap">
+      <div class="sec-head"><div class="hr-orn"></div><span class="eyebrow">Contact</span><h2>Nous trouver, nous écrire</h2></div>
+      <div class="contact-grid">
+        <div>
+          <div class="info-row"><h4>Adresse</h4><p id="t-contactAddress"></p></div>
+          <div class="info-row"><h4>Téléphone</h4><p id="t-contactPhone"></p></div>
+          <div class="info-row"><h4>Email</h4><p id="t-contactEmail"></p></div>
+          <div class="info-row" style="border:none"><h4>Horaires</h4><p id="t-hours"></p></div>
+          <a class="btn map-dir" id="map-dir" target="_blank" rel="noopener">Voir l'itinéraire →</a>
+        </div>
+        <div class="panel">
+          <h3>Un message ?</h3>
+          <form id="msg-form">
+            <div class="field"><label>Nom</label><input name="name" placeholder="Votre nom"></div>
+            <div class="field"><label>Téléphone</label><input name="phone" placeholder="Votre numéro"></div>
+            <div class="field"><label>Message</label><textarea name="note" rows="3" placeholder="Comment pouvons-nous vous aider ?"></textarea></div>
+            <button type="submit" class="btn solid">Envoyer</button>
+          </form>
+          <div id="msg-area"></div>
+        </div>
+      </div>
+      <div class="map-wrap" id="map-wrap"><iframe id="map-embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Localisation YOUNIK"></iframe></div>
+    </div></div>
+  </section>
+
+  <footer>
+    <div class="wrap">
+      <div class="foot-top">
+        <img class="flogo" src="/assets/logo.png" alt="YOUNIK">
+        <div class="foot-links">
+          <a onclick="go('/diagnostic')">Diagnostic</a><a onclick="go('/soins')">Soins</a>
+          <a onclick="go('/boutique')">Boutique</a><a onclick="go('/avis')">Avis</a>
+          <a onclick="go('/rdv')">Rendez-vous</a><a onclick="go('/contact')">Contact</a>
+        </div>
+      </div>
+      <div class="foot-bot">
+        <span>© 2026 YOUNIK · L'éclat unique de votre beauté</span>
+        <a href="/admin">Espace administrateur</a>
+      </div>
+    </div>
+  </footer>
+
+</main>
+
+<a class="wa-btn" id="wa-btn" target="_blank" rel="noopener">
+  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.46 1.32 4.96L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm0 1.67c2.2 0 4.27.86 5.82 2.42a8.18 8.18 0 0 1 2.42 5.82c0 4.54-3.7 8.24-8.25 8.24a8.2 8.2 0 0 1-4.2-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.2 8.2 0 0 1-1.26-4.38c0-4.54 3.7-8.25 8.26-8.25Zm-4.5 4.43c-.21 0-.55.08-.84.39-.29.31-1.1 1.08-1.1 2.62 0 1.55 1.13 3.04 1.29 3.25.16.21 2.22 3.39 5.38 4.75.75.32 1.34.52 1.8.66.76.24 1.44.21 1.98.13.6-.09 1.86-.76 2.12-1.49.26-.73.26-1.36.18-1.49-.08-.13-.29-.21-.6-.37-.31-.16-1.86-.92-2.15-1.02-.29-.11-.5-.16-.71.16-.21.31-.81 1.02-1 1.23-.18.21-.37.24-.68.08-.31-.16-1.32-.49-2.51-1.55-.93-.83-1.55-1.85-1.74-2.16-.18-.31-.02-.48.14-.63.14-.14.31-.37.47-.55.16-.18.21-.31.31-.52.11-.21.05-.39-.03-.55-.08-.16-.71-1.72-.97-2.35-.26-.62-.52-.54-.71-.55-.18-.01-.39-.01-.6-.01Z"/></svg>
+  <span class="lbl">WhatsApp</span>
+</a>
+<div class="toast" id="toast"></div>
+
+<script>
+  const fmt=(n,c)=>new Intl.NumberFormat('fr-FR').format(n)+' '+(c||'F');
+  let CURRENCY='F',PRODUCTS=[],TREATMENTS=[],SETTINGS={},BOOKING={},cart=[];
+  function esc(s){return (s==null?'':String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+  function set(id,v){const e=document.getElementById(id);if(e)e.textContent=v;}
+  function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2600);}
+  function closeMM(){document.getElementById('mm').classList.remove('open');}
+
+  /* ---------- ROUTEUR ---------- */
+  const ROUTES=['/','/diagnostic','/soins','/boutique','/avis','/rdv','/contact'];
+  function go(route){ location.hash='#'+route; closeMM(); }
+  function render(){
+    let r=location.hash.replace(/^#/,'')||'/';
+    if(!ROUTES.includes(r)) r='/';
+    document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.dataset.view===r));
+    document.querySelectorAll('nav.menu a').forEach(a=>a.classList.toggle('on',a.dataset.route===r));
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+  addEventListener('hashchange',render);
+
+  /* ---------- HEADER ---------- */
+  const header=document.getElementById('header');
+  addEventListener('scroll',()=>header.classList.toggle('scrolled',scrollY>20));
+
+  /* ---------- CHARGEMENT ---------- */
+  async function load(){
+    let data;
+    try{ data=await (await fetch('/api/content')).json(); }
+    catch(e){ document.querySelector('main').innerHTML='<p style="padding:120px 30px;text-align:center">Impossible de charger le contenu. Lancez le serveur (npm start).</p>'; return; }
+    const s=data.settings; SETTINGS=s; CURRENCY=s.currency||'F'; BOOKING=data.booking||{};
+    TREATMENTS=data.treatments||[]; PRODUCTS=data.products||[];
+    document.title=(s.brand||'YOUNIK')+' — '+(s.tagline||'');
+    set('home-lead',s.heroLead||'');
+    set('home-about-title',s.aboutTitle||''); set('home-about-text',s.aboutText||'');
+    set('t-contactAddress',s.contactAddress); set('t-contactPhone',s.contactPhone);
+    set('t-contactEmail',s.contactEmail); set('t-hours',s.hours);
+    // Carte / localisation GPS
+    const lat=(s.mapLat||'').toString().trim(), lng=(s.mapLng||'').toString().trim();
+    const mw=document.getElementById('map-wrap'), mdir=document.getElementById('map-dir');
+    if(lat&&lng){
+      const z=(s.mapZoom||'15').toString().trim()||'15';
+      document.getElementById('map-embed').src='https://maps.google.com/maps?q='+encodeURIComponent(lat+','+lng)+'&z='+encodeURIComponent(z)+'&hl=fr&output=embed';
+      mdir.href='https://www.google.com/maps/dir/?api=1&destination='+encodeURIComponent(lat+','+lng);
+      mw.style.display=''; mdir.style.display='';
+    } else { if(mw) mw.style.display='none'; if(mdir) mdir.style.display='none'; }
+    const mq='✦  Diagnostic de précision  ✦  Soins signature  ✦  Actifs de haute pureté  ✦  '+(s.tagline||'')+'  ';
+    set('mq1',mq); set('mq2',mq);
+    const bg=s.heroImageUrl||'/assets/hero-bg.png';
+    const hh=document.getElementById('home-hero'); if(hh&&bg) hh.style.backgroundImage="url('"+bg+"')";
+    const fl=document.getElementById('filigrane'); if(fl) fl.style.backgroundImage=bg?("url('"+bg+"')"):'none';
+
+    const grad=['#F1E6D5,#D4B894','#E7D7C0,#B58E63','#D4B894,#7C5C3D','#ECE0CD,#9A744D'];
+    // Soins
+    document.getElementById('care-grid').innerHTML=TREATMENTS.map((t,i)=>
+      `<div class="care"><div class="num">0${i+1}</div><div><h3>${esc(t.name)}</h3><div class="dur">${esc(t.duration||'')}</div><p>${esc(t.description||'')}</p></div></div>`).join('');
+    // Produits
+    const card=(p,i)=>{
+      const out=p.stock<=0;
+      const ph=p.imageUrl?`<div class="ph"><img src="${esc(p.imageUrl)}" alt="${esc(p.name)}"></div>`
+        :`<div class="ph" style="background:linear-gradient(150deg,${grad[i%grad.length]})"><svg viewBox="0 0 24 40" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="8" y="1" width="8" height="6" rx="1"/><path d="M7 11h10v24a4 4 0 0 1-4 4h-2a4 4 0 0 1-4-4V11Z"/></svg></div>`;
+      return `<article class="product">${ph}<div class="info"><span class="cat">${esc(p.category||'')}</span><h3>${esc(p.name)}</h3><p>${esc(p.description||'')}</p><div class="stock ${out?'out':''}">${out?'Épuisé':('En stock : '+p.stock)}</div><div class="row"><span class="price">${fmt(p.price,CURRENCY)}</span><button ${out?'disabled':''} onclick="addCart('${p.id}')">Ajouter</button></div></div></article>`;
+    };
+    document.getElementById('shop-grid').innerHTML=PRODUCTS.map(card).join('');
+    document.getElementById('home-prods').innerHTML=PRODUCTS.slice(0,3).map(card).join('');
+
+    renderCart(); initWhatsApp(); renderRdvTreats(); renderReviews(data); initStarPicker(); loadFlutterwave(); checkoutLabel();
+    render();
+  }
+
+  function initWhatsApp(){
+    const num=(SETTINGS.whatsapp||'').replace(/[^0-9]/g,''); const el=document.getElementById('wa-btn');
+    if(num){ el.href='https://wa.me/'+num+'?text='+encodeURIComponent('Bonjour '+(SETTINGS.brand||'YOUNIK')+', je souhaite des informations.'); el.style.display='flex'; }
+    else el.style.display='none';
+  }
+
+  /* ---------- PANIER ---------- */
+  function addCart(id){ const p=PRODUCTS.find(x=>x.id===id); if(!p)return; const l=cart.find(x=>x.productId===id); if(l)l.qty++; else cart.push({productId:id,name:p.name,price:p.price,qty:1}); renderCart(); toast(p.name+' ajouté au panier'); }
+  function removeCart(id){ cart=cart.filter(x=>x.productId!==id); renderCart(); }
+  function renderCart(){
+    const list=document.getElementById('cart-list');
+    if(!cart.length) list.innerHTML='<p class="cart-empty">Votre panier est vide.</p>';
+    else list.innerHTML=cart.map(l=>`<div class="cart-line"><span>${esc(l.name)} × ${l.qty}</span><span>${fmt(l.price*l.qty,CURRENCY)} <button onclick="removeCart('${l.productId}')">×</button></span></div>`).join('');
+    const total=cart.reduce((s,l)=>s+l.price*l.qty,0);
+    document.getElementById('cart-total').textContent=fmt(total,CURRENCY);
+    document.getElementById('cart-badge').textContent=cart.reduce((s,l)=>s+l.qty,0);
+    checkoutLabel();
+  }
+  function checkoutLabel(){ const b=document.getElementById('checkout-btn'); if(!b)return; b.textContent=(cart.length&&SETTINGS.paymentMode==='online'&&SETTINGS.flwPublicKey)?'Payer & commander':'Commander'; }
+
+  /* ---------- COMMANDE / PAIEMENT ---------- */
+  document.getElementById('order-form').addEventListener('submit',async e=>{
+    e.preventDefault(); const f=e.target;
+    if(!f.name.value.trim()||!f.phone.value.trim()){ toast('Indiquez votre nom et votre téléphone'); return; }
+    if(!cart.length){ toast('Votre panier est vide'); return; }
+    if(SETTINGS.paymentMode==='online'&&SETTINGS.flwPublicKey){ payOnline(f); return; }
+    placeOrder(f,null);
+  });
+  async function placeOrder(f,payment){
+    const body={name:f.name.value.trim(),phone:f.phone.value.trim(),note:f.note.value.trim(),items:cart.map(l=>({productId:l.productId,qty:l.qty}))};
+    if(payment) body.payment=payment;
+    let r; try{ r=await fetch('/api/orders',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});}catch(e){toast('Erreur réseau');return;}
+    if(!r.ok){ toast('Erreur — réessayez.'); return; }
+    const data=await r.json(); showPayResult(data.order,f);
+  }
+  function showPayResult(order,f){
+    const area=document.getElementById('pay-area'); f.reset(); cart=[]; renderCart();
+    if(order.paid){ area.innerHTML='<div class="pay-note"><b>Paiement reçu ✓</b><br>Commande n°'+esc(order.id)+' ('+fmt(order.total,CURRENCY)+') confirmée. Merci !</div>'; toast('Paiement reçu ✓'); return; }
+    if(SETTINGS.paymentMode==='mobile'){
+      const num=(SETTINGS.whatsapp||'').replace(/[^0-9]/g,'');
+      const msg=encodeURIComponent('Bonjour '+(SETTINGS.brand||'YOUNIK')+', je confirme ma commande n°'+order.id+" d'un montant de "+fmt(order.total,CURRENCY)+'.');
+      const wa=num?'<a class="wa" target="_blank" rel="noopener" href="https://wa.me/'+num+'?text='+msg+'">Confirmer par WhatsApp</a>':'';
+      area.innerHTML='<div class="pay-note"><b>Commande n°'+esc(order.id)+' — '+fmt(order.total,CURRENCY)+'</b><br>'+esc(SETTINGS.mobileInstructions||'')+'<br>'+wa+'</div>';
+    } else {
+      area.innerHTML='<div class="pay-note"><b>Commande n°'+esc(order.id)+' — '+fmt(order.total,CURRENCY)+'</b><br>Réglez sur place ou à la livraison. Nous vous recontactons sous 24h.</div>';
+    }
+    toast('Commande enregistrée ✓');
+  }
+  function payOnline(f){
+    if(typeof FlutterwaveCheckout==='undefined'){ toast('Paiement en ligne en cours de chargement…'); return; }
+    const total=cart.reduce((s,l)=>s+l.price*l.qty,0);
+    FlutterwaveCheckout({public_key:SETTINGS.flwPublicKey,tx_ref:'younik-'+Date.now(),amount:total,currency:'XOF',
+      customer:{name:f.name.value.trim(),phonenumber:f.phone.value.trim()},
+      customizations:{title:(SETTINGS.brand||'YOUNIK'),description:'Commande boutique'},
+      callback:function(resp){ placeOrder(f,{transactionId:resp.transaction_id||resp.id,ref:resp.tx_ref}); },onclose:function(){}});
+  }
+  function loadFlutterwave(){ if(SETTINGS.paymentMode==='online'&&SETTINGS.flwPublicKey&&!document.getElementById('flw-js')){const s=document.createElement('script');s.src='https://checkout.flutterwave.com/v3.js';s.id='flw-js';document.head.appendChild(s);} }
+
+  /* ---------- MESSAGE CONTACT ---------- */
+  document.getElementById('msg-form').addEventListener('submit',async e=>{
+    e.preventDefault(); const f=e.target;
+    if(!f.name.value.trim()||!f.phone.value.trim()){ toast('Indiquez votre nom et votre téléphone'); return; }
+    try{ const r=await fetch('/api/orders',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:f.name.value.trim(),phone:f.phone.value.trim(),note:f.note.value.trim(),items:[{name:'Message de contact',qty:1}]})});
+      if(!r.ok) throw 0; f.reset(); document.getElementById('msg-area').innerHTML='<div class="pay-note">Message bien reçu ✓ Nous vous répondons sous 24h.</div>'; toast('Message envoyé ✓');
+    }catch(err){ toast('Erreur — réessayez.'); }
+  });
+
+  /* ---------- DIAGNOSTIC ---------- */
+  const quiz={answers:[null,null,null]};
+  const CONCERN_KW={acne:['acné','imperfection','purifiant','nettoyant','peeling','sébum','bouton'],taches:['tache','éclat','éclairciss','vitamine','pigment','sérum','lumineux'],age:['âge','anti-âge','collagène','ferme','ride','réparatrice','nuit','peptide'],hydratation:['hydrat','crème','réparatrice','barrière','déshydrat']};
+  function answer(step,val){ quiz.answers[step]=val; if(step<2) goStep(step+1); else showResult(); }
+  function goStep(n){ document.querySelectorAll('#diag-result').forEach(x=>x.classList.remove('show')); document.querySelectorAll('.q-step').forEach(s=>s.classList.toggle('active',+s.dataset.step===n)); }
+  function restartQuiz(){ quiz.answers=[null,null,null]; document.getElementById('diag-result').classList.remove('show'); goStep(0); }
+  function matchKW(list,kws){ return list.find(o=>{const t=((o.name||'')+' '+(o.description||'')+' '+(o.category||'')).toLowerCase();return kws.some(k=>t.includes(k));}); }
+  function showResult(){
+    document.querySelectorAll('.q-step').forEach(s=>s.classList.remove('active'));
+    const kws=CONCERN_KW[quiz.answers[1]]||[];
+    const treat=matchKW(TREATMENTS.filter(t=>!/diagnostic/i.test(t.name)),kws)||TREATMENTS.find(t=>!/diagnostic/i.test(t.name))||TREATMENTS[0];
+    set('rec-treat-name',treat?treat.name:'Diagnostic personnalisé');
+    set('rec-treat-desc',treat?(treat.description||''):'Prenez rendez-vous pour un bilan complet.');
+    window._recTreatId=treat?treat.id:'';
+    const inStock=PRODUCTS.filter(p=>p.stock>0);
+    let recs=inStock.filter(p=>{const t=((p.name||'')+' '+(p.description||'')+' '+(p.category||'')).toLowerCase();return kws.some(k=>t.includes(k));});
+    inStock.forEach(p=>{ if(recs.length<2&&!recs.includes(p)) recs.push(p); });
+    recs=recs.slice(0,2);
+    const lbl=document.getElementById('rec-prod-label'),box=document.getElementById('rec-prods');
+    if(recs.length){ lbl.style.display='block'; box.innerHTML=recs.map(p=>`<div class="rec-prod"><div class="pn">${esc(p.name)}</div><div class="pp">${fmt(p.price,CURRENCY)}</div></div>`).join(''); }
+    else { lbl.style.display='none'; box.innerHTML=''; }
+    document.getElementById('diag-result').classList.add('show');
+  }
+  function prefillBooking(){ if(window._recTreatId) rdvPickTreat(window._recTreatId); }
+
+  /* ---------- RENDEZ-VOUS ---------- */
+  const rdv={treatId:'',treatName:'',date:'',time:''};
+  const DOW=['Dim','Lun','Mar','Mer','Jeu','Ven','Sam'],MON=['Janv','Févr','Mars','Avr','Mai','Juin','Juil','Août','Sept','Oct','Nov','Déc'];
+  const pad2=n=>String(n).padStart(2,'0'); const isoDate=d=>d.getFullYear()+'-'+pad2(d.getMonth()+1)+'-'+pad2(d.getDate());
+  function renderRdvTreats(){
+    const list=TREATMENTS.length?TREATMENTS:[{id:'',name:'Consultation'}];
+    document.getElementById('rdv-treats').innerHTML=list.map(t=>`<button class="chip" onclick="rdvPickTreat('${t.id}')">${esc(t.name)}</button>`).join('');
+    if(BOOKING&&BOOKING.enabled===false) document.querySelector('[data-view="/rdv"] .rdv-card').innerHTML='<p class="muted">La réservation en ligne est momentanément fermée. Contactez-nous directement.</p>';
+  }
+  function rdvGo(step){ document.querySelectorAll('.rdv-step').forEach(s=>s.classList.toggle('active',s.dataset.rstep===step)); }
+  function rdvPickTreat(id){ const t=TREATMENTS.find(x=>x.id===id)||{id:id,name:'Consultation'}; rdv.treatId=t.id;rdv.treatName=t.name;rdv.date='';rdv.time=''; document.getElementById('rdv-sum1').innerHTML='Soin : <b>'+esc(t.name)+'</b>'; renderRdvDates(); rdvGo('date'); }
+  function renderRdvDates(){
+    const days=(BOOKING.days||[1,2,3,4,5,6]),horizon=BOOKING.horizonDays||21,box=document.getElementById('rdv-dates'),today=new Date(),out=[];
+    for(let i=0;i<=horizon;i++){ const d=new Date(today); d.setDate(today.getDate()+i); if(days.includes(d.getDay())) out.push(`<div class="date-chip" onclick="rdvPickDate('${isoDate(d)}',this)"><span class="dow">${DOW[d.getDay()]}</span><span class="dnum">${d.getDate()}</span><span class="mon">${MON[d.getMonth()]}</span></div>`); }
+    box.innerHTML=out.length?out.join(''):'<p class="muted">Aucune date ouverte.</p>';
+  }
+  async function rdvPickDate(iso,el){
+    rdv.date=iso;rdv.time=''; document.querySelectorAll('#rdv-dates .date-chip').forEach(c=>c.classList.remove('sel')); if(el)el.classList.add('sel');
+    const d=new Date(iso+'T00:00:00'); document.getElementById('rdv-sum2').innerHTML='Soin : <b>'+esc(rdv.treatName)+'</b> · '+DOW[d.getDay()]+' '+d.getDate()+' '+MON[d.getMonth()];
+    let times=[]; try{ times=(await (await fetch('/api/availability?date='+iso)).json()).times||[]; }catch(e){}
+    const box=document.getElementById('rdv-times'),none=document.getElementById('rdv-notimes');
+    if(times.length){ none.style.display='none'; box.innerHTML=times.map(t=>`<button class="chip" onclick="rdvPickTime('${t}',this)">${t}</button>`).join(''); }
+    else { box.innerHTML=''; none.style.display='block'; }
+    rdvGo('time');
+  }
+  function rdvPickTime(t,el){ rdv.time=t; document.querySelectorAll('#rdv-times .chip').forEach(c=>c.classList.remove('sel')); if(el)el.classList.add('sel'); const d=new Date(rdv.date+'T00:00:00'); document.getElementById('rdv-sum3').innerHTML='Soin : <b>'+esc(rdv.treatName)+'</b> · '+DOW[d.getDay()]+' '+d.getDate()+' '+MON[d.getMonth()]+' à <b>'+t+'</b>'; rdvGo('form'); }
+  async function confirmRdv(){
+    const name=document.getElementById('rdv-name').value.trim(),phone=document.getElementById('rdv-phone').value.trim(),note=document.getElementById('rdv-note').value.trim();
+    if(!name||!phone){ toast('Indiquez votre nom et votre téléphone'); return; }
+    let r; try{ r=await fetch('/api/appointments',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({treatmentId:rdv.treatId,date:rdv.date,time:rdv.time,name,phone,note})});}catch(e){toast('Erreur réseau');return;}
+    if(r.ok){ const d=new Date(rdv.date+'T00:00:00'); document.getElementById('rdv-done-msg').innerHTML='Votre rendez-vous pour <b>'+esc(rdv.treatName)+'</b> le '+DOW[d.getDay()]+' '+d.getDate()+' '+MON[d.getMonth()]+' à <b>'+rdv.time+'</b> est confirmé.'; rdvGo('done'); toast('Rendez-vous confirmé ✓'); }
+    else { const e=await r.json().catch(()=>({})); toast(e.error||'Créneau indisponible'); rdvPickDate(rdv.date); }
+  }
+  function restartRdv(){ rdv.treatId='';rdv.treatName='';rdv.date='';rdv.time=''; ['rdv-name','rdv-phone','rdv-note'].forEach(id=>document.getElementById(id).value=''); rdvGo('treat'); }
+
+  /* ---------- AVIS ---------- */
+  function starHtml(n){ n=Math.max(0,Math.min(5,Math.round(n))); return '★'.repeat(n)+'<span class="off">'+'★'.repeat(5-n)+'</span>'; }
+  function renderReviews(data){
+    const rs=data.reviewStats||{count:0,avg:0};
+    document.getElementById('rev-avg').innerHTML=rs.count?'<span class="num">'+rs.avg.toFixed(1)+'</span><span class="stars">'+starHtml(rs.avg)+'</span><span class="cnt">'+rs.count+' avis</span>':'<span class="cnt">Soyez la première à laisser un avis.</span>';
+    document.getElementById('rev-grid').innerHTML=(data.reviews||[]).slice(0,6).map(r=>`<div class="rev"><div class="rstars stars">${starHtml(r.rating)}</div><p>« ${esc(r.comment)} »</p><div class="who">${esc(r.name)}</div>${r.productName?'<div class="prod">'+esc(r.productName)+'</div>':''}</div>`).join('');
+    document.getElementById('rv-prod').innerHTML='<option value="">— Avis général —</option>'+PRODUCTS.map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join('');
+  }
+  let rvRating=5;
+  function initStarPicker(){ const w=document.getElementById('rv-stars'); const paint=()=>w.querySelectorAll('span').forEach(s=>s.classList.toggle('on',+s.dataset.n<=rvRating)); w.querySelectorAll('span').forEach(s=>s.onclick=()=>{rvRating=+s.dataset.n;paint();}); paint(); }
+  async function submitReview(){
+    const name=document.getElementById('rv-name').value.trim(),comment=document.getElementById('rv-comment').value.trim(),productId=document.getElementById('rv-prod').value;
+    if(!name||!comment){ toast('Indiquez votre nom et votre avis'); return; }
+    let r; try{ r=await fetch('/api/reviews',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,comment,rating:rvRating,productId})});}catch(e){toast('Erreur réseau');return;}
+    if(r.ok){ document.getElementById('rv-name').value='';document.getElementById('rv-comment').value='';rvRating=5;initStarPicker(); toast('Merci pour votre avis ✓'); try{ renderReviews(await (await fetch('/api/content')).json()); }catch(e){} }
+    else toast('Avis incomplet');
+  }
+
+  load();
+</script>
+</body>
+</html>
